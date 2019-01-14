@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">-->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">-->
+        <link rel="stylesheet" href="libs/jquery.mobile.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="libs/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="libs/jquery.mobile-1.4.5.min.js"></script>
+        <script type="text/javascript" src="libs/fuzzyset.js"></script>
+        <script type="text/javascript" src="js/inorganic.js"></script>
+        <title>Hello World</title>
+    </head>
+    <body>
+        <!--<div class="app">
+            <h1>Apache Cordova</h1>
+            <div id="deviceready" class="blink">
+                <p class="event listening">Connecting to Device</p>
+                <p class="event received">Device is Ready</p>
+            </div>
+        </div>-->
+        <!-- Start of first page -->
+<div data-role="page" id="home">
+
+	<div data-role="header">
+		<h1>Naming Practice</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<!--<p>View internal page called <a href="#bar">bar</a></p>-->
+        <a href="#inorganic" onclick='inorganic.genQuestion()'class="ui-btn ui-corner-all">Inorganic</a>
+	</div><!-- /content -->
+
+	<div data-role="footer">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+<!-- Start of second page -->
+<div data-role="page" id="inorganic">
+
+	<div data-role="header">
+        <a href="#home" class="ui-btn ui-corner-all">home</a>
+		<h1>Inorganic</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<div id="question"></div><br/>
+        <div id="resp">
+            <label for="ans">Enter your answer here:</label> 
+            <input id ="answer"type="text" name="ans"></div>
+            <div class="ui-input-btn ui-btn ui-mini">
+                Submit
+                <input onclick="inorganic.checkAns()"type="button" data-enhanced="true" value="Submit">
+            </div>
+        <div id="Ans"></div>
+		<!--<p><a href="#Home">Back to foo</a></p>-->
+	</div><!-- /content -->
+
+	<div data-role="footer">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+        
+    </body>
+</html>
