@@ -102,15 +102,22 @@ var inorganic={
         console.log(ans);
         var type=$("#question")[0].children[0].dataset.type;
         var formAns=this.scrubName(this.compound.Formula);
+        $(".nxtBtn").replaceWith("");
         if(type==1){
              console.log(this.compound.NameArray);
+            var isCorrect=false;
             if(this.compound.NameArray.length>0){
-                var isCorrect=false;
                 this.compound.NameArray.forEach(function(element) {
-                    element.removeParens();
                 }, this);
-                ans.removeParens();
-                var fuzzyMatch=FuzzySet(this.compound.NameArray);
+                ans=ans.removeParens().replaceAll(" ","").toLowerCase();
+                for(var i=0;i<this.compound.NameArray.length;i++){
+                    this.compound.NameArray[i]=this.compound.NameArray[i].removeParens().replaceAll(" ","").toLowerCase();
+                    console.log(this.compound.NameArray[i],ans);
+                    if(this.compound.NameArray[i].indexOf(ans)>-1){
+                        isCorrect=true;
+                    }
+                }
+                /*var fuzzyMatch=FuzzySet(this.compound.NameArray);
                 console.log(this.compound.NameArray,ans)
                 var matchRes=fuzzyMatch.get(ans,[]);
                 if(matchRes===null||matchRes==null||matchRes.length<1){
@@ -122,11 +129,18 @@ var inorganic={
                     if(matchRes[i][0]>0.9){
                         isCorrect=true;
                     }
-                }
+                }*/
+
             }else{
-                var fuzzyMatch=FuzzySet([this.compound.Name.toLowerCase().removeParens()]);
+                /*var fuzzyMatch=FuzzySet([this.compound.Name.toLowerCase().removeParens()]);
                 console.log(fuzzyMatch.get(ans.removeParens().toLowerCase()));
                 if(fuzzyMatch.get(ans.removeParens().toLowerCase())[0][0]>0.87){
+                    isCorrect=true;
+                }*/
+                ans=ans.removeParens().replaceAll(" ","").toLowerCase();
+                this.compound.Name=this.compound.Name.removeParens().replaceAll(" ","").toLowerCase();
+                console.log(ans,this.compound.Name)
+                if(this.compound.Name.indexOf(ans)>-1){
                     isCorrect=true;
                 }
             }
@@ -137,7 +151,7 @@ var inorganic={
             }
         }else{
             console.log(ans,formAns);
-            if(ans.replace(" ","").indexOf(formAns.replace(" ",""))>-1){
+            if(ans.replaceAll(" ","").indexOf(formAns.replaceAll(" ",""))>-1){
                 this.correctAnsResp();
             }else{
                 this.generateHint();
@@ -146,12 +160,22 @@ var inorganic={
     },
     correctAnsResp:function(){
         console.log("correct");
+        //create correct message
+
+        //create next button
+        var button='<div onclick="inorganic.newQuestion()"class="removeOnClean nxtBtn"><a class="ui-btn ui-corner-all">Next</a></div>';
+        $("#Ans").append(button);
     },
     generateHint:function(){
         console.log("incorrect");
     },
     cleanUp:function(){
         $("#answer")[0].value="";
+        $(".removeOnClean").replaceWith("");
+    },
+    newQuestion:function(){
+        this.cleanUp();
+        this.genQuestion();
     },
     getNames:function(compound){
         return compound.name.split("%");
