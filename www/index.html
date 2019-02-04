@@ -16,7 +16,7 @@
         <script type="text/javascript" src="libs/jquery.mobile-1.4.5.min.js"></script>
         <script type="text/javascript" src="libs/fuzzyset.js"></script>
         <script type="text/javascript" src="js/inorganic.js"></script>
-        <title>Hello World</title>
+        <title>chemNamer</title>
     </head>
     <body>
         <!--<div class="app">
@@ -35,10 +35,33 @@
 
 	<div role="main" class="ui-content">
 		<!--<p>View internal page called <a href="#bar">bar</a></p>-->
-        <a href="#inorganic" onclick='inorganic.genQuestion()'class="ui-btn ui-corner-all">Inorganic</a>
-	</div><!-- /content -->
+        <div class="grouper center">
+            <h3 style="font-size:20px;background-color:black;margin:0px;padding:3px;color:white;">Inorganic</h3>
+        <form class="marg10">
+            <!--<label for="flip-checkbox-2">Ionic Compounds</label>
+            <input type="checkbox" data-role="flipswitch" name="flip-checkbox-2" id="inorgIonic" data-on-text="On" data-off-text="Off" data-wrapper-class="custom-label-flipswitch">-->
+            <label for="flip-checkbox-2">Include Covalent Compounds</label>
+            <input type="checkbox" data-role="flipswitch" name="flip-checkbox-2" id="inorgCovalent" data-on-text="On" data-off-text="Off" data-wrapper-class="custom-label-flipswitch">
+            <label for="flip-checkbox-2">Timed + Score keeping</label>
+            <input type="checkbox" data-role="flipswitch" name="flip-checkbox-2" id="inorgTScore" data-on-text="On" data-off-text="Off" data-wrapper-class="custom-label-flipswitch">
+            <label for="flip-checkbox-2">Streak Score</label>
+            <input type="checkbox" data-role="flipswitch" name="flip-checkbox-2" id="inorgSScore" data-on-text="On" data-off-text="Off" data-wrapper-class="custom-label-flipswitch">
+            <a href="#inorganic" onclick='inorganic.genQuestion()'class="ui-btn ui-corner-all"><b><b>Practice Inorganic Naming</b></b></a>
+        </form>
+        </div>
+	</div>
+    <!--<div role="main" class="ui-content">
+        <div class="grouper center">
+            <h3 style="font-size:20px;background-color:black;margin:0px;padding:3px;color:white;">Organic</h3>
+        <form class="marg10">
+            <h2>Coming Soon!!!</h2>
+            <a href="#organic" onclick='organic.genQuestion()'class="ui-btn ui-corner-all"><b><b>Practice Organic</b></b></a>
+        </form>
+        </div>
+	</div>-->
+    <!-- /content -->
 
-	<div data-role="footer">
+	<div data-role="footer" class="bottom">
 		<h4>ChemNamer</h4>
 	</div><!-- /footer -->
 </div><!-- /page -->
@@ -64,10 +87,34 @@
 		<!--<p><a href="#Home">Back to foo</a></p>-->
 	</div><!-- /content -->
 
-	<div data-role="footer">
+	<div data-role="footer" class="bottom">
 		<h4>ChemNamer</h4>
 	</div><!-- /footer -->
 </div><!-- /page -->
+<div data-role="page" id="organic1">
+
+	<div data-role="header">
+        <a href="#home" class="ui-btn ui-corner-all homeBtn">HOME</a>
+		<h1>Organic</h1>
+	</div><!-- /header -->
+
+	<div id="mainOrg" role="main" class="ui-content">
+		<div id="question"></div><br/>
+        <div id="resp">
+            <label for="ansO">Enter your answer here:</label> 
+            <input id ="answerO"type="text" name="ansO"></div>
+            <div class="ui-input-btn ui-btn ui-mini">
+                Submit
+                <input onclick="organic.checkAns()"type="button" data-enhanced="true" value="Submit">
+            </div>
+        <div id="AnsO"></div>
+		<!--<p><a href="#Home">Back to foo</a></p>-->
+	</div><!-- /content -->
+
+	<div data-role="footer" class="bottom">
+		<h4>ChemNamer</h4>
+	</div><!-- /footer -->
+</div>
         
     </body>
 </html>

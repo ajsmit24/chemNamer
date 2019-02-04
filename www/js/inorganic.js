@@ -14,6 +14,7 @@ String.prototype.removeParens = function() {
 
 
 var inorganic={
+    time:"",
     setup:function(){},
     compound:{},
     genQuestion:function(){
@@ -24,11 +25,14 @@ var inorganic={
         //r!=1 is give name want formula
         var q="<div class='remove'data-type="+r+">What is the";//questins
         var n=comp.Name;//name of compound
-       
+        var cap="</div>";
+        var insert=" ?";
+        //comp.Formula=comp.Formula.substring(0,comp.Formula.length);
+        comp.Formula=comp.Formula.replaceAll("</div>","");
         if(r==1){
-            q+=" name of "+comp.Formula+" ?";
+            q+=" name of "+comp.Formula+insert+cap;
         }else{
-            q+=" formula of "+n+" ?";
+            q+=" formula of "+n+insert+cap;
         }
         q+="</div>";
         $(".remove").replaceWith("");
@@ -36,15 +40,28 @@ var inorganic={
     },
     getRandCompound:function(){
         var r=Math.floor(Math.random()*(1-0+1)+0);
-        if(r==1){
-           return this.getRandIonic(); 
-        }else{
-            return this.getRandCompound();
-        }
+        var useCov=$("#inorgCovalent")[0].checked;
+        //var useIon=$("#inorgIonic")[0].checked;
+        //if((!useIon&&!useCov)||(useIon&&useCov)){
+            if(r==1||!useCov){
+                return this.getRandIonic(); 
+            }else{
+                return this.getRandCovalent();
+            }
+        /*}else{
+           if(useIon){
+                return this.getRandIonic(); 
+            }else{
+                return this.getRandCompound();
+            }
+        }*/
     },
     getRandIonic:function(){
         var cat=this.getRandCation();
         var an=this.getRandAnion();
+        if(cat.name==="Hydrogen"&&(an.name==="Hydroxide"||an.name==="Hydride")){
+            return this.getRandIonic();
+        }else{
         console.log(cat,an);
         var name=cat.name+" "+an.name;
         var nameArr=[];
@@ -53,9 +70,12 @@ var inorganic={
              var anNameArr=this.getNames(an);
              for(var i=0;i<catNameArr.length;i++){
                  for(var j=0;j<anNameArr.length;j++){
-                     console.log(an)
-                     this.suffixitArr(an,j);
-                     nameArr.push(catNameArr[i]+anNameArr[j]);
+                     if(cat.name==="Hydrogen"){
+                         anNameArr[j]=this.acidifyEnd(anNameArr[j]);
+                     }else{
+                         this.suffixitArr(an,j);
+                     }
+                     nameArr.push(catNameArr[i]+" "+anNameArr[j]);
                  }
              }
              name=nameArr[0];
@@ -65,6 +85,7 @@ var inorganic={
         var reduced=this.commonFactor(catNumb,anNumb);
         catNumb=reduced[0];
         anNumb=reduced[1];
+
         if(an.isPoly){
             an.elemSymb=this.polySubscripter(an.elemSymb,anNumb)
         }
@@ -80,6 +101,22 @@ var inorganic={
         var formula="<div>"+cat.elemSymb+"<sub>"+catNumb+"</sub>"+an.elemSymb+"<sub>"+anNumb+"</sub></div>";
         console.log(name,formula,nameArr);
         return {Name:name,Formula:formula,NameArray:nameArr};
+        }
+    },
+    acidifyEnd:function(anName){
+        if(anName.substring(anName.length-3)==="ate"){
+            anName=anName.substring(anName.length-3)+"ic";
+        }
+        if(anName.substring(anName.length-3)==="ite"){
+            anName=anName.substring(anName.length-3)+"ous";
+        }
+        return anName;
+    },
+    getRandCovalent:function(){
+        var list =covalents;
+        var r=Math.floor(Math.random()*(list.length-0+1)+0);
+        console.log(list,r);
+        return {Name:list[r].name,Formula:list[r].formula,NameArray:[]};
     },
     getRandAnion:function(){
        var list= ions.anion;
@@ -102,9 +139,8 @@ var inorganic={
         console.log(ans);
         var type=$("#question")[0].children[0].dataset.type;
         var formAns=this.scrubName(this.compound.Formula);
-        $(".nxtBtn").replaceWith("");
+        $(".removeOnClean").replaceWith("");
         if(type==1){
-             console.log(this.compound.NameArray);
             var isCorrect=false;
             if(this.compound.NameArray.length>0){
                 this.compound.NameArray.forEach(function(element) {
@@ -112,7 +148,6 @@ var inorganic={
                 ans=ans.removeParens().replaceAll(" ","").toLowerCase();
                 for(var i=0;i<this.compound.NameArray.length;i++){
                     this.compound.NameArray[i]=this.compound.NameArray[i].removeParens().replaceAll(" ","").toLowerCase();
-                    console.log(this.compound.NameArray[i],ans);
                     if(this.compound.NameArray[i].indexOf(ans)>-1){
                         isCorrect=true;
                     }
@@ -139,8 +174,7 @@ var inorganic={
                 }*/
                 ans=ans.removeParens().replaceAll(" ","").toLowerCase();
                 this.compound.Name=this.compound.Name.removeParens().replaceAll(" ","").toLowerCase();
-                console.log(ans,this.compound.Name)
-                if(this.compound.Name.indexOf(ans)>-1){
+                if(this.compound.Name.indexOf(ans)>-1&&ans.length>0){
                     isCorrect=true;
                 }
             }
@@ -150,7 +184,6 @@ var inorganic={
                 this.generateHint();
             }
         }else{
-            console.log(ans,formAns);
             if(ans.replaceAll(" ","").indexOf(formAns.replaceAll(" ",""))>-1){
                 this.correctAnsResp();
             }else{
@@ -159,15 +192,16 @@ var inorganic={
         }
     },
     correctAnsResp:function(){
-        console.log("correct");
         //create correct message
-
+        var cor="<div class='removeOnClean green exclim'>Correct!</div>"
         //create next button
         var button='<div onclick="inorganic.newQuestion()"class="removeOnClean nxtBtn"><a class="ui-btn ui-corner-all">Next</a></div>';
+        button=cor+button;
         $("#Ans").append(button);
     },
     generateHint:function(){
-        console.log("incorrect");
+        var cor="<div class='removeOnClean red exclim'>Incorrect</div>";
+        $("#Ans").append(cor);
     },
     cleanUp:function(){
         $("#answer")[0].value="";
@@ -212,6 +246,14 @@ var inorganic={
     },
 
 }
+var covalents=[
+    {name:"Carbon Dioxide",formula:"CO2"},
+    {name:"Nitrogen Trioxide",formula:"NO3"},
+    {name:"Sulfur Pentoxide",formula:"SO5"},
+    {name:"Diphosphorus pentasulfide",formula:"P2S5"},
+    {name:"Boron trifloride",formula:"BF3"},
+    {name:"dihydrogen monoxide",formula:"H2O"},
+];
 var ions={
     anion:{
         acetate:{name:"Acetate",charge:"-1",elemSymb:"C2H3O2",isPoly:true},
@@ -295,10 +337,10 @@ var ions={
         strontium:{name:"Strontium",charge:"2",elemSymb:"Sr",isPoly:false},
         gallium:{name:"Gallium",charge:"3",elemSymb:"Ga",isPoly:false},
         nickel_iii:{name:"Nickel (III)",charge:"3",elemSymb:"Ni",isPoly:false},
-        carbon:{name:"Carbon",charge:"4",elemSymb:"C",isPoly:false},
+        //carbon:{name:"Carbon",charge:"4",elemSymb:"C",isPoly:false},
         silicon:{name:"Silicon",charge:"4",elemSymb:"Si",isPoly:false},
         germanium:{name:"Germanium",charge:"4",elemSymb:"Ge",isPoly:false},
 
     },
    // 
-}
+};

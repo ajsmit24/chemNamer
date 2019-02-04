@@ -118,3 +118,12 @@ h1 {
     animation:fade 3000ms infinite;
     -webkit-animation:fade 3000ms infinite;
 }
+.center{
+    justify-content: center;
+}
+.grouper{
+    border: 2px solid black;
+    border-radius:5px;
+}
+.header:{
+}
